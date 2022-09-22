@@ -19,12 +19,12 @@ class BL_CustomGrid_Model_Grid_Type_Checkout_Agreement extends BL_CustomGrid_Mod
     {
         return array('adminhtml/checkout_agreement_grid');
     }
-    
+
     protected function _getBaseEditableFields($blockType)
     {
         /** @var $helper Mage_Checkout_Helper_Data */
         $helper = Mage::helper('checkout');
-        
+
         $fields = array(
             'name' => array(
                 'type'     => 'text',
@@ -69,7 +69,7 @@ class BL_CustomGrid_Model_Grid_Type_Checkout_Agreement extends BL_CustomGrid_Mod
                 'form_class'     => 'validate-css-length',
             ),
         );
-        
+
         if (!Mage::app()->isSingleStoreMode()) {
             $fields['store_id'] = array(
                 'type'              => 'multiselect',
@@ -78,33 +78,33 @@ class BL_CustomGrid_Model_Grid_Type_Checkout_Agreement extends BL_CustomGrid_Mod
                 'render_block_type' => 'customgrid/widget_grid_editor_renderer_static_store',
             );
         }
-        
+
         return $fields;
     }
-    
+
     protected function _prepareEditableFieldCommonConfig(
         $blockType,
         $fieldId,
         BL_CustomGrid_Model_Grid_Edit_Config $config
     ) {
         parent::_prepareEditableFieldCommonConfig($blockType, $fieldId, $config);
-        
+
         // Remove editor handle, as it is not used/needed in original edit form
         if (($config->getType() == 'editor') && is_array($handles = $config->getData('layout_handles'))) {
             $config->setData(
                 'layout_handles',
-                array_filter($handles, create_function('$v', 'return ($v != "blcg_grid_editor_handle_editor");'))
+                array_filter($handles, function($v) { return $v != "blcg_grid_editor_handle_editor";})
             );
         }
-        
+
         return $this;
     }
-    
+
     protected function _getEntityRowIdentifiersKeys($blockType)
     {
         return array('agreement_id');
     }
-    
+
     protected function _loadEditedEntity($blockType, BL_CustomGrid_Object $config, array $params, $entityId)
     {
         /** @var $agreement Mage_Checkout_Model_Agreement */
@@ -112,12 +112,12 @@ class BL_CustomGrid_Model_Grid_Type_Checkout_Agreement extends BL_CustomGrid_Mod
         $agreement->load($entityId);
         return $agreement;
     }
-    
+
     protected function _getEditRequiredAclPermissions($blockType)
     {
         return 'sales/checkoutagreement';
     }
-    
+
     protected function _applyEditedFieldValue($blockType, BL_CustomGrid_Object $config, array $params, $entity, $value)
     {
         /** @var $entity Mage_Checkout_Model_Agreement */
@@ -128,7 +128,7 @@ class BL_CustomGrid_Model_Grid_Type_Checkout_Agreement extends BL_CustomGrid_Mod
         $entity->setStores($entity->getStoreId());
         return parent::_applyEditedFieldValue($blockType, $config, $params, $entity, $value);
     }
-    
+
     protected function _getSavedFieldValueForRender($blockType, BL_CustomGrid_Object $config, array $params, $entity)
     {
         /** @var $entity Mage_Checkout_Model_Agreement */
