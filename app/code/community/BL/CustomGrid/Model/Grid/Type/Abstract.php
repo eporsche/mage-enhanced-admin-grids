@@ -1388,7 +1388,7 @@ abstract class BL_CustomGrid_Model_Grid_Type_Abstract extends BL_CustomGrid_Obje
             'global'     => array_diff_key($request->getParams(), $usedKeys),
         );
 
-        return array_map(create_function('$v', 'return (is_array($v) ? $v : array());'), $params);
+        return array_map(function($v) { return (is_array($v) ? $v : array());}, $params);
     }
 
     /**
